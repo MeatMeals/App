@@ -1,0 +1,41 @@
+# Python-related
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+# Flask-related
+instance/
+*.sqlite3
+*.db
+
+# Logs & temp files
+*.log
+*.tmp
+
+# IDE/editor files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Node.js (for frontend)
+node_modules/
+dist/
+build/
+
+# Environment variables
+.env
+*.env
+
+# Byte-compiled / cached files
+*.swp
+.DS_Store
+Thumbs.db
+
+# Git-related
+.git/
+
