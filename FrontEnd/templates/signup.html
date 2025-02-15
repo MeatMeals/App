@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Meat Meals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-utensils me-2"></i> Meat Meals
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt me-1"></i> Log In</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="home-content justify-content-center align-items-center">
+        <div class="login-container card p-4 shadow-sm">
+            <h2 class="text-center mb-4">Sign Up</h2>
+                <form method="POST" class="needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="username" 
+                                   name="username"
+                                   required placeholder="Enter your username" 
+                                   required 
+                                   autocomplete="username"
+                                    aria-describedby="username-feedback">
+                            <div id="username-feedback" class="invalid-feedback">Please choose a username.</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <div class="input-group">
+                            <input type="email" 
+                                   class="form-control" 
+                                   id="email" 
+                                   name="email"
+                                   required placeholder="Enter your email address" 
+                                   required autocomplete="email"
+                                   aria-describedby="email-feedback">
+                            <div id="email-feedback" class="invalid-feedback">Please enter a valid email address.</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="password" 
+                                   name="password"
+                                   required placeholder="Create a password" 
+                                   required minlength="8" 
+                                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                                   autocomplete="new-password"
+                                   aria-describedby="password-feedback">
+                            <div id="password-feedback" class="invalid-feedback">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.</div>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2"><button type="submit" class="btn btn-primary">Sign Up</button></div>
+                </form>
+                    
+            <p class="text-muted text-center mt-3">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+        </div>
+    </div>
+    
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Meat Meals. All rights reserved.</p>
+            <p>
+                <a href="/privacy-policy">Privacy Policy</a> | 
+                <a href="/terms-of-service">Terms of Service</a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

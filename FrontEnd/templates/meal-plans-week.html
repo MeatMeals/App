@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Meal Plan | Meat Meals</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <style>
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 3rem 1rem;
+        }
+
+        /* View & Select Date Section */
+        .view-date-container {
+            background: #fff;
+            padding: 2rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+
+        .day-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #d64933;
+            margin-bottom: 1rem;
+        }
+
+        .meal-plan-container {
+            background: #fff;
+            padding: 2rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 1100px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .meal-plan-container h2 {
+            font-size: 2rem;
+            color: #d64933;
+            text-align: center;
+        }
+
+        /* Meal Grid */
+        .meal-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            justify-content: space-between;
+        }
+
+        .meal-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #d64933;
+            text-align: center;
+            margin-bottom: -0.5rem;
+        }
+
+        /* Meal Cards */
+        .meal-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        
+        .meal-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .meal-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .meal-description {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        /* Button Layout */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-top: auto;
+            width: 100%;
+        }
+
+        .btn-group .btn {
+            flex: 1;
+            font-size: 0.85rem;
+            border-radius: 6px;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            border: none;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            border: none;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1250px) {
+            .meal-row {
+                
+                grid-template-columns: 1fr;
+                flex-direction: row;
+            }
+        }
+
+        @media (max-width: 768px) {
+            
+            .btn-group {
+                
+                grid-template-columns: 1fr;
+                flex-direction: row;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fas fa-utensils me-2"></i> Meat Meals
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard"><i class="fas fa-home me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/search-recipes"><i class="fas fa-search me-1"></i> Search Recipes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/meal-plans"><i class="fas fa-calendar-alt me-1"></i> Meal Plans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt me-1"></i> Log Out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- View & Select Date Section -->
+        <div class="meal-plan-container">
+            <h2>My Meal Plans</h2>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="view_type" class="form-label">View</label>
+                    <select class="form-select" id="view_type">
+                        <option value="day">Day</option>
+                        <option value="week">Week</option>
+                        <option value="month">Month</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="date_select" class="form-label">Select Date</label>
+                    <input type="date" class="form-control" id="date_select">
+                </div>
+            </div>
+        </div>
+
+        <!-- Meal Plan Section -->
+        <div class="meal-plan-container">
+            <p class="day-title">Monday, January 13</p>
+            <div class="meal-row">
+                <div>
+                    <h3 class="meal-header">Breakfast</h3>
+                    <div class="meal-card">
+                        <h3 class="meal-header">Breakfast</h3>
+                        <img src="images/breakfast.jpg" alt="Pan Seared Lamb Loin">
+                        <p class="meal-title">Pan Seared Lamb Loin</p>
+                        <p class="meal-description">With Chimichurri & Roasted Trio Squash Salad With Goat Cheese and Pinenuts</p>
+                        <div class="btn-group">
+                            <button class="btn btn-info"><i class="fas fa-info-circle"></i> Nutrition</button>
+                            <button class="btn btn-primary"><i class="fas fa-book-open"></i> View Recipe</button>
+                            <button class="btn btn-warning"><i class="fas fa-exchange-alt"></i> Change</button>
+                            <button class="btn btn-danger"><i class="fas fa-trash"></i> Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="meal-header">Lunch</h3>
+                    <div class="meal-card">
+                        <img src="images/lunch.jpg" alt="Fluffy Frittata">
+                        <p class="meal-title">Fluffy Frittata</p>
+                        <p class="meal-description">Fluffy frittata with spinach</p>
+                        <div class="btn-group">
+                            <button class="btn btn-info"><i class="fas fa-info-circle"></i> Nutrition</button>
+                            <button class="btn btn-primary"><i class="fas fa-book-open"></i> View Recipe</button>
+                            <button class="btn btn-warning"><i class="fas fa-exchange-alt"></i> Change</button>
+                            <button class="btn btn-danger"><i class="fas fa-trash"></i> Remove</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="meal-header">Dinner</h3>
+                    <div class="meal-card">
+                        <img src="images/dinner.jpg" alt="Glazed Pork Chops">
+                        <p class="meal-title">Glazed Pork Chops</p>
+                        <p class="meal-description">Glazed pork chops</p>
+                        <div class="btn-group">
+                            <button class="btn btn-info"><i class="fas fa-info-circle"></i> Nutrition</button>
+                            <button class="btn btn-primary"><i class="fas fa-book-open"></i> View Recipe</button>
+                            <button class="btn btn-warning"><i class="fas fa-exchange-alt"></i> Change</button>
+                            <button class="btn btn-danger"><i class="fas fa-trash"></i> Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <p>&copy; 2025 Meat Meals. All rights reserved.</p>
+                <p>
+                    <a href="/privacy-policy">Privacy Policy</a> | 
+                    <a href="/terms-of-service">Terms of Service</a>
+                </p>
+            </div>
+        </footer>
+</body>
+</html>
