@@ -1,4 +1,4 @@
-## MeatMeals
+# MeatMeals
 
 Introduction here 
 
@@ -13,7 +13,7 @@ https://mm-hch9are8dudugmbp.canadacentral-01.azurewebsites.net
 These domains point to the deployed version of Meat Meals, providing the full functionality of the application.
 
 =======================================
-## Instructions for Running the Meat Meals Project
+# Instructions for Running the Meat Meals Project
 
 To set up and run the Meat Meals project, follow these steps:
 
@@ -24,7 +24,7 @@ Ensure you have the following installed on your machine:
 Python: Version 3.11.9
 ```
 
-# Required Python frameworks:
+## Required Python frameworks:
 
 ```
 Flask==3.1.0
@@ -44,28 +44,28 @@ You can install the required frameworks using the following command in your term
 pip install 'framework-name==version'
 ```
 
-## Setting Up the Project
-# Download the Project
+# Setting Up the Project
+## Download the Project
 
 ```
 Download all project files to your local machine and ensure they are stored in a designated project directory.
 ```
 
-# Navigate to the Project Directory
+## Navigate to the Project Directory
 ```
 Open your terminal or command prompt and navigate to the project folder using:
 
 cd 'your-project-file-location'
 ```
 
-# Run the Application Locally
+## Run the Application Locally
 ```
 To launch the project in debug mode, execute:
 
 python app.py
 ```
 
-# Run the Application
+## Run the Application
 ```
 Once running, open a browser and go to:
 http://localhost:5000/
