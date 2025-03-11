@@ -23,9 +23,14 @@ z-index: -1;
 }
 
 
-.bg-secondary {
-background-color: #f08c35 !important;
-}
+.bg-primary { background-color: #f08c35 !important; }
+
+.bg-secondary { background-color:#d64933; }
+
+.bg-info { background-color:#d64933; }
+
+
+.badge .bg-info { background-color:#d64933; }
 
 .navbar {
 background: linear-gradient(90deg, #f08c35, #d64933);
@@ -247,6 +252,20 @@ margin-bottom: 1rem;
 color: #d64933;
 }
 
+.login-container .btn-primary {
+background: #f08c35;
+border: none;
+width: 100%;
+padding: 0.75rem;
+border-radius: 8px;
+font-size: 1rem;
+transition: background 0.3s;
+}
+
+.login-container .btn-primary:hover {
+background: #d64933;
+}
+
 .signup-container {
 max-width: 400px;
 margin: 4rem auto;
@@ -254,6 +273,20 @@ padding: 2rem;
 background: #fff;
 box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
 border-radius: 12px;
+}
+
+.signup-container.btn-primary {
+background: #f08c35;
+border: none;
+width: 100%;
+padding: 0.75rem;
+border-radius: 8px;
+font-size: 1rem;
+transition: background 0.3s;
+}
+
+.signup-container .btn-primary:hover {
+background: #d64933;
 }
 
 .signup-container h2 {
@@ -612,86 +645,86 @@ font-weight: 500;
 
 /* Container for the Meals block */
 .nutrition-container {
-    margin: 0 auto;
-    background-color: #fff;
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-    padding: 2rem;
-    border-radius: 12px;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .meal-type {
-    color: #d64933;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #f08c35;
-    padding-bottom: 0.5rem;
-    text-align: center;
-  }
-  
-  .meal-card {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    margin-bottom: 1rem;
-    overflow: hidden; 
-    padding: 1rem;
-  }
-  
-  .meal-card img {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 1rem;
-    flex-shrink: 0;
-  }
-  
-  /* Right side: meal title, cals, button stacked */
-  .meal-card-body {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    align-items: center;
-    gap:1rem;
-    width: 100%;
-  }
-  
-  /* Meal Title */
-  .meal-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    margin:0;
-  }
-  
-  /* Calories in orange/red */
-  .calories {
-    color: #d64933;
-    font-weight: 700;
-    margin: 0 1rem; 
-    font-size: 1rem;
-    white-space: nowrap;
-    text-align: center;
-  }
-  
-  /* Re-style .btn-info to match your brand orange */
-  .btn-info {
-    background: #f08c35; /* your orange */
-    border: none;
-    color: #fff;
-    transition: background 0.3s;
-  }
-  
-  .btn-info:hover {
-    background: #d64933;
-    color: #fff;
-  }
-  
+margin: 0 auto;
+background-color: #fff;
+box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+padding: 2rem;
+border-radius: 12px;
+text-align: center;
+margin-bottom: 2rem;
+}
+
+.meal-type {
+color: #d64933;
+font-size: 1.4rem;
+font-weight: 600;
+margin-top: 1.5rem;
+margin-bottom: 1rem;
+border-bottom: 2px solid #f08c35;
+padding-bottom: 0.5rem;
+text-align: center;
+}
+
+.meal-card {
+display: flex;
+align-items: center;
+background-color: #fff;
+border-radius: 10px;
+box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+margin-bottom: 1rem;
+overflow: hidden; 
+padding: 1rem;
+}
+
+.meal-card img {
+width: 100px;
+height: 100px;
+object-fit: cover;
+border-radius: 8px;
+margin-right: 1rem;
+flex-shrink: 0;
+}
+
+/* Right side: meal title, cals, button stacked */
+.meal-card-body {
+display: grid;
+grid-template-columns: 1fr auto auto;
+align-items: center;
+gap:1rem;
+width: 100%;
+}
+
+/* Meal Title */
+.meal-title {
+font-size: 1.2rem;
+font-weight: 600;
+margin-bottom: 0.25rem;
+margin:0;
+}
+
+/* Calories in orange/red */
+.calories {
+color: #d64933;
+font-weight: 700;
+margin: 0 1rem; 
+font-size: 1rem;
+white-space: nowrap;
+text-align: center;
+}
+
+/* Re-style .btn-info to match your brand orange */
+.btn-info {
+background: #f08c35; /* your orange */
+border: none;
+color: #fff;
+transition: background 0.3s;
+}
+
+.btn-info:hover {
+background: #d64933;
+color: #fff;
+}
+
 
 .btn-icon {
 border: none;
