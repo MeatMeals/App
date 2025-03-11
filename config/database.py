@@ -1,5 +1,5 @@
 import pyodbc
-from config import DB_SERVER, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_DRIVER
+from config.config import DB_SERVER, DB_NAME, DB_USERNAME, DB_PASSWORD, DB_DRIVER
 
 def get_db_connection():
     conn_str = f'DRIVER={DB_DRIVER};SERVER={DB_SERVER};DATABASE={DB_NAME};UID={DB_USERNAME};PWD={DB_PASSWORD}'

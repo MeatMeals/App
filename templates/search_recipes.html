@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Search Recipes | Meat Meals{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    
+    <div class="card mt-4 mb-4">
+        <h2 class="fw-bold mt-4 mb-4 text-center">Search Recipes</h2>
+        <p class="text-muted">Find recipes based on ingredients and dietary preferences</p>
+    </div>
+    
+        <div class="card mt-4 mb-4">
+        <div class="card-body text-center">
+            <form method="GET" action="{{ url_for('search_recipes') }}">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="ingredients" class="form-label fw-bold">Ingredients</label>
+                        <select class="form-select" id="ingredients" name="ingredients" multiple data-live-search="true">
+                            <option value="chicken">Chicken</option>
+                            <option value="beef">Beef</option>
+                            <option value="pork">Pork</option>
+                            <option value="fish">Fish</option>
+                            <option value="rice">Rice</option>
+                            <option value="pasta">Pasta</option>
+                            <option value="potato">Potato</option>
+                            <option value="carrot">Carrot</option>
+                            <option value="onion">Onion</option>
+                            <option value="garlic">Garlic</option>
+                            <option value="tomato">Tomato</option>
+                            <option value="broccoli">Broccoli</option>
+                            <option value="spinach">Spinach</option>
+                            <option value="mushroom">Mushroom</option>
+                            <option value="cheese">Cheese</option>
+                            <option value="egg">Egg</option>
+                            <option value="milk">Milk</option>
+                            <option value="butter">Butter</option>
+                            <option value="olive oil">Olive Oil</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label for="diet" class="form-label fw-bold">Dietary Preference</label>
+                        <select class="form-select" id="diet" name="diet">
+                            <option value="">Any</option>
+                            <option value="vegetarian">Vegetarian</option>
+                            <option value="vegan">Vegan</option>
+                            <option value="gluten-free">Gluten Free</option>
+                            <option value="ketogenic">Ketogenic</option>
+                            <option value="paleo">Paleo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">&nbsp;</label>
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </div>
+            </form>
+            <small class="text-muted d-block mt-3">Hold Ctrl/Cmd to select multiple ingredients</small>
+        </div>
+    </div>
+
+    {% if recipes %}
+    <div class="search-results mt-5">
+        <h2 class="search-header text-center text-uppercase fw-bold">
+            <i class="fas fa-utensils me-2"></i> Recipes Found
+        </h2>
+    
+        <div class="row">
+            {% for recipe in recipes %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 recipe-card shadow-sm border-0">
+                    {% if recipe.image %}
+                    <img src="{{ recipe.image }}" class="card-img-top" alt="{{ recipe.title }}">
+                    {% endif %}
+                    <div class="card-body d-flex flex-column text-center">
+                        <h5 class="card-title fw-bold text-dark">{{ recipe.title }}</h5>
+                        
+                        {% if recipe.readyInMinutes %}
+                        <p class="text-muted"><small><i class="fas fa-clock me-1"></i> Ready in {{ recipe.readyInMinutes }} minutes</small></p>
+                        {% endif %}
+                        
+                        <!-- Pushes buttons to the bottom -->
+                        <div class="mt-auto">
+                            <button type="button" class="btn btn-primary w-100"
+                                    onclick="showAddToMealPlanModal('{{ recipe.id }}', '{{ recipe.title }}')">
+                                <i class="fas fa-plus me-1"></i> Add to Meal Plan
+                            </button>
+                            <button type="button" class="btn btn-secondary w-100 mt-2"
+                                    onclick="showNutritionInfo('{{ recipe.id }}')">
+                                <i class="fas fa-info-circle me-1"></i> Nutrition Info
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    {% endif %}
+    
+    
+
+<!-- Add to Meal Plan Modal -->
+<div class="modal fade" id="addToMealPlanModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add to Meal Plan</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addToMealPlanForm" method="POST" action="{{ url_for('add_to_meal_plan') }}">
+                    <input type="hidden" id="recipe_id" name="recipe_id">
+                    <div class="mb-3">
+                        <label for="date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="meal_type" class="form-label">Meal Type</label>
+                        <select class="form-select" id="meal_type" name="meal_type" required>
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add to Plan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Meal Modal -->
+<div class="modal fade" id="changeMealModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Meal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="changeMealForm" method="POST" action="{{ url_for('change_meal') }}">
+                    <input type="hidden" id="new_recipe_id" name="new_recipe_id">
+                    <div class="mb-3">
+                        <label for="change_date" class="form-label">Date</label>
+                        <input type="date" class="form-control" id="change_date" name="date" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="change_meal_type" class="form-label">Meal Type to Replace</label>
+                        <select class="form-select" id="change_meal_type" name="meal_type" required>
+                            <option value="breakfast">Breakfast</option>
+                            <option value="lunch">Lunch</option>
+                            <option value="dinner">Dinner</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-warning">Change Meal</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nutrition Info Modal -->
+<div class="modal fade" id="nutritionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nutrition Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="nutritionModalBody">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#ingredients').select2({
+        placeholder: 'Select ingredients',
+        allowClear: true,
+        tags: true
+    });
+});
+</script>
+{% endblock %} 
