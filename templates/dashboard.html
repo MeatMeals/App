@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | Meat Meals{% endblock %}
+
+{% block content %}
+
+<div class="main-content d-flex flex-column align-items-center text-center py-5">
+    <div class="welcome-container text-center">
+        <h2 class="display-4 mb-3">
+            <i class="fas fa-utensils welcome-icon"></i> Welcome to Meat Meals!
+        </h2>
+        <p class="fs-4 fw-bold">Hello, <span class="user-name">{{ session.username }}</span>!</p>
+        <p class="text-muted fs-5">What would you like to cook today?</p>
+    </div>
+    
+    <div class="grid-container">
+        <div class="grid-item">
+            <i class="fas fa-search"></i>
+            <h3>Search Recipes</h3>
+            <p>Search recipes by ingredients or dietary preferences</p>
+            <a href="{{ url_for('search_recipes') }}" class="btn">Browse Recipes</a>
+        </div>
+        <div class="grid-item">
+            <i class="fas fa-calendar-alt"></i>
+            <h3>Meal Plans</h3>
+            <p>View and manage your meal plans</p>
+            <a href="{{ url_for('meal_plans') }}" class="btn">View Plans</a>
+        </div>
+        <div class="grid-item">
+            <i class="fas fa-shopping-cart"></i>
+            <h3>Grocery List</h3>
+            <p>Generate your grocery list</p>
+            <a href="{{ url_for('grocery_list') }}" class="btn">Manage List</a>
+        </div>
+        <div class="grid-item">
+            <i class="fas fa-random"></i>
+            <h3>Random Meal Plan</h3>
+            <p>Generate a random meal plan for the week</p>
+            <a href="{{ url_for('random_meal_plan') }}" class="btn">Generate Plan</a>
+        </div>
+        <div class="grid-item">
+            <i class="fas fa-chart-line"></i>
+            <h3>Nutrition Tracking</h3>
+            <p>Track your nutritional intake</p>
+            <a href="{{ url_for('nutrition_tracking') }}" class="btn">Track Your Diet</a>
+        </div>
+        <div class="grid-item">
+            <i class="fas fa-weight"></i>
+            <h3>Weight Loss Tracking</h3>
+            <p>Monitor your weight loss progress</p>
+            <a href="{{ url_for('weight_tracking') }}" class="btn">Track Progress</a>
+        </div>
+    </div>
+</div>
+{% endblock %} 

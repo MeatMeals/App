@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+
+{% block title %}Meal Plans | Meat Meals{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h2 class="fw-bold text-center"><i class="fas fa-calendar-alt me-2"></i> Meal Plans</h2>            
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <label for="view_type" class="form-label fw-bold">View</label>
+                    <select class="form-select" id="view_type" onchange="changeView(this.value)">
+                        <option value="day" {% if view_type == 'day' %}selected{% endif %}>Day</option>
+                        <option value="week" {% if view_type == 'week' %}selected{% endif %}>Week</option>
+                        <option value="month" {% if view_type == 'month' %}selected{% endif %}>Month</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="date_select" class="form-label fw-bold">Select Date</label>
+                    <input type="date" class="form-control" id="date_select" 
+                           value="{{ selected_date }}" onchange="changeDate(this.value)">
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- day -->
+    {% if view_type == 'day' %}
+    <div class="card mt-4 mb-4 day-card">
+      <div class="card-body day-body">
+        <h3 class="day-date text-center fw-bold">
+          Date: {{ selected_date.strftime("%B %d, %Y") if selected_date else "" }}
+        </h3>
+    
+        {% for meal_type in ['breakfast', 'lunch', 'dinner'] %}
+
+          <div class="day-meal-section mb-4">
+            <h4 class="day-meal-type text-capitalize">{{ meal_type }}</h4>
+    
+            {% set meal = meals.get(meal_type) %}
+            {% if meal %}
+              <div class="day-meal-card">
+                {% if meal.image %}
+                <img src="{{ meal.image }}" class="day-meal-image" alt="{{ meal.title }}">
+                {% endif %}
+    
+                <div class="day-meal-card-body">
+                  <h5 class="day-meal-title">{{ meal.title }}</h5>
+                  <div class="day-meal-actions">
+                    <button type="button" class="btn btn-icon" title="Nutrition"
+                            onclick="showNutritionInfo('{{ meal.recipe_id }}')">
+                      <i class="fas fa-info-circle"></i>
+                    </button>
+                    <button type="button" class="btn btn-icon" title="View Recipe"
+                            onclick="showRecipeDetails('{{ meal.recipe_id }}')">
+                      <i class="fas fa-book-open"></i>
+                    </button>
+                    <button type="button" class="btn btn-icon" title="Change Meal"
+                            onclick="showChangeMealModal('{{ meal.recipe_id }}', '{{ meal.title }}')">
+                      <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <button type="button" class="btn btn-icon" title="Remove Meal"
+                            onclick="removeMeal('{{ meal.id }}')">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <p class="text-muted">No meal planned</p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    
+    
+    <!-- week -->
+    {% if view_type == 'week' %}
+    <div class="card mt-4 mb-4 weekly-card">
+      <div class="card-body weekly-body">
+        <h3 class="weekly-title text-center fw-bold">Week Overview</h3>
+    
+        {% for day in week_dates %}
+          <div class="weekly-day mb-4">
+            <h4 class="weekly-day-heading">
+              {{ day.strftime('%A, %B %d') }}
+            </h4>
+    
+            <div class="row align-items-stretch">
+              {% for meal_type in ['breakfast', 'lunch', 'dinner'] %}
+                <div class="col-md-4 mb-3 d-flex flex-column">
+                  <h5 class="weekly-meal-type text-capitalize text-center">
+                    {{ meal_type }}
+                  </h5>
+    
+                  {% set meal = weekly_meals.get((day.strftime('%Y-%m-%d'), meal_type)) %}
+                  {% if meal %}
+                    <div class="weekly-meal-card flex-grow-1 d-flex flex-column">
+                      {% if meal.image %}
+                      <img src="{{ meal.image }}" class="weekly-meal-image" alt="{{ meal.title }}">
+                      {% endif %}
+                      <div class="weekly-meal-card-body d-flex flex-column justify-content-between">
+                        <h6 class="weekly-meal-title">{{ meal.title }}</h6>
+    
+                        <!-- Icon Buttons -->
+                        <div class="weekly-meal-actions mt-2">
+                          <button type="button" class="btn btn-icon" title="Nutrition"
+                                  onclick="showNutritionInfo('{{ meal.recipe_id }}')">
+                            <i class="fas fa-info-circle"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon" title="View Recipe"
+                                  onclick="showRecipeDetails('{{ meal.recipe_id }}')">
+                            <i class="fas fa-book-open"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon" title="Change Meal"
+                                  onclick="showChangeMealModal('{{ meal.recipe_id }}','{{ meal.title }}')">
+                            <i class="fas fa-exchange-alt"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon" title="Remove Meal" onclick="removeMeal('{{ meal.id }}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  {% else %}
+                    <p class="text-muted mt-2">No meal planned</p>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    
+    
+
+    <!-- month -->
+    {% if view_type == 'month' %}
+    <h3 class="meal-date text-center fw-bold mb-4">
+      {{ month_dates[0].strftime('%B %Y') }}
+    </h3>
+    
+    <div class="row align-items-stretch">
+      {% for date in month_dates %}
+      <div class="col-md-4 mb-4 d-flex">
+        <div class="card flex-fill d-flex flex-column">
+    
+          <div class="card-header" style="border-bottom: 2px solid #f08c35;">
+            <h4 class="meal-type mb-0" style="font-size: 1.2rem; color: #d64933;">
+              {{ date.strftime('%A, %B %d') }}
+            </h4>
+          </div>
+    
+          <div class="card-body" style="flex: 1; display: flex; flex-direction: column;">
+            {% for meal_type in ['breakfast', 'lunch', 'dinner'] %}
+            <div class="mb-3">
+              <h5 class="text-capitalize fw-bold" 
+                  style="color: #d64933; font-size: 1rem; margin-bottom: 0.5rem;">
+                {{ meal_type }}
+              </h5>
+    
+              {% set meal = monthly_meals.get((date.strftime('%Y-%m-%d'), meal_type)) %}
+              {% if meal %}
+                <div class="card meal-card" 
+                     style="border: none; box-shadow: 0 3px 6px rgba(0,0,0,0.08); margin-bottom: 0.5rem;">
+                  <div class="row g-0">
+                    {% if meal.image %}
+                    <div class="col-md-4">
+                      <img src="{{ meal.image }}" 
+                           class="img-fluid rounded-start meal-image" 
+                           alt="{{ meal.title }}" 
+                           style="width: 100%; height: 100px; object-fit: cover;">
+                    </div>
+                    {% endif %}
+                    <div class="col">
+                      <div class="card-body p-2">
+                        <h6 class="card-title mb-2" 
+                            style="font-weight: 600; font-size: 0.95rem; color: #333;">
+                          {{ meal.title }}
+                        </h6>
+                        <div class="meal-card-actions d-flex gap-2">
+                          <button type="button" class="btn btn-icon" 
+                                  title="Nutrition"
+                                  onclick="showNutritionInfo('{{ meal.recipe_id }}')">
+                            <i class="fas fa-info-circle"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon" 
+                                  title="View Recipe"
+                                  onclick="showRecipeDetails('{{ meal.recipe_id }}')">
+                            <i class="fas fa-book-open"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon" 
+                                  title="Change Meal"
+                                  onclick="showChangeMealModal('{{ meal.recipe_id }}','{{ meal.title }}')">
+                            <i class="fas fa-exchange-alt"></i>
+                          </button>
+                          <button type="button" class="btn btn-icon" 
+                                  title="Remove Meal"
+                                  onclick="removeMeal('{{ meal.id }}')">
+                            <i class="fas fa-trash"></i>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">No meal planned</p>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+    
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}    
+</div>
+
+<!-- Nutrition Info Modal -->
+<div class="modal fade" id="nutritionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nutrition Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="nutritionModalBody">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recipe Details Modal -->
+<div class="modal fade" id="recipeModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Recipe Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="recipeModalBody">
+                Loading...
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Change Meal Modal -->
+<div class="modal fade" id="changeMealModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change Meal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="searchRecipesForm" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="change_ingredients" class="form-label">Ingredients</label>
+                            <select class="form-select" id="change_ingredients" multiple data-live-search="true">
+                                <option value="chicken">Chicken</option>
+                                <option value="beef">Beef</option>
+                                <option value="pork">Pork</option>
+                                <option value="fish">Fish</option>
+                                <option value="rice">Rice</option>
+                                <option value="pasta">Pasta</option>
+                                <option value="potato">Potato</option>
+                                <option value="carrot">Carrot</option>
+                                <option value="onion">Onion</option>
+                                <option value="garlic">Garlic</option>
+                                <option value="tomato">Tomato</option>
+                                <option value="broccoli">Broccoli</option>
+                                <option value="spinach">Spinach</option>
+                                <option value="mushroom">Mushroom</option>
+                                <option value="cheese">Cheese</option>
+                                <option value="egg">Egg</option>
+                                <option value="milk">Milk</option>
+                                <option value="butter">Butter</option>
+                                <option value="olive oil">Olive Oil</option>
+                            </select>
+                            <div class="form-text">Hold Ctrl/Cmd to select multiple ingredients</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="change_diet" class="form-label">Dietary Preference</label>
+                            <select class="form-select" id="change_diet">
+                                <option value="">Any</option>
+                                <option value="vegetarian">Vegetarian</option>
+                                <option value="vegan">Vegan</option>
+                                <option value="gluten-free">Gluten Free</option>
+                                <option value="ketogenic">Ketogenic</option>
+                                <option value="paleo">Paleo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-primary" onclick="searchRecipesForChange()">
+                            <i class="fas fa-search me-1"></i>Search Recipes
+                        </button>
+                        <form id="changeMealForm" method="POST" action="{{ url_for('change_meal') }}" class="d-inline">
+                            <input type="hidden" id="new_recipe_id" name="new_recipe_id">
+                            <input type="hidden" id="change_date" name="date">
+                            <input type="hidden" id="change_meal_type" name="meal_type">
+                            <button type="submit" class="btn btn-warning" id="confirmChangeBtn" disabled>
+                                <i class="fas fa-exchange-alt me-1"></i>Confirm Change
+                            </button>
+                        </form>
+                    </div>
+                </form>
+
+                <div id="searchResults" class="d-none mt-4">
+                    <h6 class="mb-3">Search Results</h6>
+                    <div id="recipeResults" class="row g-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

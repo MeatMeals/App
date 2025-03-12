@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 import requests
-from database import get_db_connection, init_db
-from config import SPOONACULAR_API_KEY, SECRET_KEY
+from config.database import get_db_connection, init_db
+from config.config import SPOONACULAR_API_KEY, SECRET_KEY
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
@@ -12,10 +12,8 @@ app.secret_key = SECRET_KEY
 init_db()
 
 @app.route('/')
-def index():
-    if 'user_id' in session:
-        return redirect(url_for('dashboard'))
-    return redirect(url_for('login'))
+def homepage():
+    return render_template('homepage.html')
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -72,7 +70,7 @@ def dashboard():
 @app.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    return redirect(url_for('homepage'))
 
 @app.route('/search_recipes')
 def search_recipes():
@@ -139,18 +137,26 @@ def meal_plans():
         return redirect(url_for('login'))
         
     view_type = request.args.get('view', 'day')
-    selected_date = request.args.get('date', datetime.now().strftime('%Y-%m-%d'))
+    selected_date_str = request.args.get('date', datetime.now().strftime('%Y-%m-%d'))
+
+    try:
+        selected_datetime = datetime.strptime(selected_date_str, '%Y-%m-%d')
+    except ValueError:
+        selected_datetime = datetime.now()
     
     conn = get_db_connection()
     cursor = conn.cursor()
     
     if view_type == 'day':
+
+        date_for_query = selected_datetime.strftime('%Y-%m-%d')
+
         # Fetch meals for the selected day
         cursor.execute('''
             SELECT mp.id, mp.recipe_id, mp.meal_type, mp.date
             FROM meal_plans mp
             WHERE mp.user_id = ? AND mp.date = ?
-        ''', (session['user_id'], selected_date))
+        ''', (session['user_id'], date_for_query))
         
         meals = {}
         for meal in cursor.fetchall():
@@ -166,17 +172,18 @@ def meal_plans():
                 
         return render_template('meal_plans.html',
                              view_type=view_type,
-                             selected_date=selected_date,
+                             selected_date=selected_datetime,
                              meals=meals)
                              
     elif view_type == 'week':
+        
         # Calculate week dates
-        selected_datetime = datetime.strptime(selected_date, '%Y-%m-%d')
         week_start = selected_datetime - timedelta(days=selected_datetime.weekday())
         week_dates = [week_start + timedelta(days=i) for i in range(7)]
         
         # Fetch meals for the whole week
         weekly_meals = {}
+
         for date in week_dates:
             date_str = date.strftime('%Y-%m-%d')
             cursor.execute('''
@@ -197,18 +204,20 @@ def meal_plans():
                     
         return render_template('meal_plans.html',
                              view_type=view_type,
-                             selected_date=selected_date,
+                             selected_date=selected_datetime,
                              week_dates=week_dates,
                              weekly_meals=weekly_meals)
     
     elif view_type == 'month':
+        
         # Calculate month dates
-        selected_datetime = datetime.strptime(selected_date, '%Y-%m-%d')
         month_start = selected_datetime.replace(day=1)
+
         if month_start.month == 12:
             next_month = month_start.replace(year=month_start.year + 1, month=1)
         else:
             next_month = month_start.replace(month=month_start.month + 1)
+
         month_dates = []
         current_date = month_start
         
@@ -239,14 +248,14 @@ def meal_plans():
                     
         return render_template('meal_plans.html',
                              view_type=view_type,
-                             selected_date=selected_date,
+                             selected_date=selected_datetime,
                              month_dates=month_dates,
                              monthly_meals=monthly_meals)
     
     conn.close()
     return render_template('meal_plans.html',
                          view_type=view_type,
-                         selected_date=selected_date)
+                         selected_date=selected_datetime)
 
 @app.route('/remove_meal/<int:meal_id>', methods=['POST'])
 def remove_meal(meal_id):
@@ -711,6 +720,13 @@ def search_recipes_api():
             'success': False,
             'message': str(e)
         })
+
+
+@app.route('/weight-tracking')
+def weight_tracking():
+    return render_template('weight_tracking.html')
+
+
 
 if __name__ == '__main__':
     app.run(debug=True) 

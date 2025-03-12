@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Homepage | Meat Meals{% endblock %}
+
+{% block content %}
+<section class="hero-section bg-dark text-light">
+    <div class="container text-center">
+        <h1>Welcome to Meat Meals!</h1>
+        <p>Your go-to platform for discovering, planning, and enjoying incredible recipes. Let’s make every meal your own!</p>
+        {% if not session.get('user_id') %}
+            <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg mt-3">Join Now</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="features-section py-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card">
+                    <img src="{{ url_for('static', filename='images/recipes.jpg') }}" alt="Recipes" class="card-img-top">
+                    <div class="card-body text-center">
+                        <h3>Explore Recipes</h3>
+                        <p>Discover thousands of recipes for every taste, from classic dishes to exciting new ideas.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card">
+                    <img src="{{ url_for('static', filename='images/plan.jpg') }}" alt="Meal Planning" class="card-img-top">
+                    <div class="card-body text-center">
+                        <h3>Plan Your Meals</h3>
+                        <p>Save time and stay organized with meal plans tailored to your schedule and preferences.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card feature-card">
+                    <img src="{{ url_for('static', filename='images/nutrition.jpg') }}" alt="Track Nutrition" class="card-img-top">
+                    <div class="card-body text-center">
+                        <h3>Track Nutrition</h3>
+                        <p>Stay healthy and informed with our easy-to-use nutrition tracking tools.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="cta-section text-center py-5 bg-secondary text-white">
+    <div class="container">
+        <h2>Join Meat Meals Today</h2>
+        <p>Start exploring delicious recipes, plan your meals with ease, and take the stress out of cooking.</p>
+        {% if not session.get('user_id') %}
+            <a href="{{ url_for('signup') }}" class="btn btn-light btn-lg mt-3">Sign Up for Free</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

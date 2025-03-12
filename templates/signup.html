@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up | Meat Meals{% endblock %}
+
+{% block content %}
+
+<div class="home-content justify-content-center align-items-center">
+    <div class="login-container card p-4 shadow-sm">
+        <h2 class="text-center mb-4 fw-bold">Sign Up</h2>
+            <form method="POST" class="needs-validation" novalidate>
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <div class="input-group">
+                        <input type="text" 
+                               class="form-control" 
+                               id="username" 
+                               name="username"
+                               required placeholder="Enter your username" 
+                               required 
+                               autocomplete="username"
+                                aria-describedby="username-feedback">
+                        <div id="username-feedback" class="invalid-feedback">Please choose a username.</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <input type="email" 
+                               class="form-control" 
+                               id="email" 
+                               name="email"
+                               required placeholder="Enter your email address" 
+                               required autocomplete="email"
+                               aria-describedby="email-feedback">
+                        <div id="email-feedback" class="invalid-feedback">Please enter a valid email address.</div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <div class="input-group">
+                        <input type="password" 
+                               class="form-control" 
+                               id="password" 
+                               name="password"
+                               required placeholder="Create a password" 
+                               required minlength="8" 
+                               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                               autocomplete="new-password"
+                               aria-describedby="password-feedback">
+                        <div id="password-feedback" class="invalid-feedback">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number.</div>
+                    </div>
+                </div>
+                <div class="d-grid gap-2"><button type="submit" class="btn btn-primary">Sign Up</button></div>
+            </form>
+                
+        <p class="text-muted text-center mt-5">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+    </div>
+</div>
+{% endblock %}
