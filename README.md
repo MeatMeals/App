@@ -1,6 +1,12 @@
-# MeatMeals
+# MeatMeals 🍖
 
-Introduction here 
+A Recipe & Meal Planning Web Application
+
+## Introduction
+
+Meat Meals is a user-friendly web application designed to help users search for recipes, plan meals, and track their nutrition. Whether you're looking for new meal ideas based on available ingredients, following a specific dietary preference, or organizing your weekly or monthly meal plan, Meat Meals makes it easy to manage everything in one place.
+
+With an intuitive interface and filtering options, users can search for recipes by ingredients, dietary preferences, and meal types, while also tracking their meal plans with daily, weekly, and monthly views. The application ensures a smooth and personalized experience, allowing users to add meals to their plan, swap meals, view detailed nutrition information, and more.
 
 ## Useful Information
 
@@ -45,27 +51,26 @@ pip install 'framework-name==version'
 # Setting Up the Project
 ## Download the Project
 
-```
 Download all project files to your local machine and ensure they are stored in a designated project directory.
-```
 
 ## Navigate to the Project Directory
-```
-Open your terminal or command prompt and navigate to the project folder using:
 
+Open your terminal or command prompt and navigate to the project folder using:
+```
 cd 'your-project-file-location'
 ```
 
 ## Run the Application Locally
-```
-To launch the project in debug mode, execute:
 
+To launch the project in debug mode, execute:
+```
 python app.py
 ```
 
 ## Run the Application
-```
+
 Once running, open a browser and go to:
+```
 http://localhost:5000/
 ```
 
