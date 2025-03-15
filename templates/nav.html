@@ -10,7 +10,6 @@
             <ul class="navbar-nav ms-auto">
                 
                 {% if session.get('user_id') %}
-                    <!-- Show Dashboard Menu if Logged In -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('dashboard') }}"><i class="fas fa-home me-1"></i> Dashboard</a>
                     </li>
@@ -26,12 +25,15 @@
                         </a>
                     </li>
 
-                {% else %}
-                    <!-- Show Login/Signup Buttons if NOT Logged In -->
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('homepage') }}"><i class="fas fa-home me-1"></i> Home</a>
-                    </li>
-
+                    {% else %}
+                    {% if request.path != url_for('homepage') %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('homepage') }}">
+                                <i class="fas fa-home me-1"></i> Home
+                            </a>
+                        </li>
+                    {% endif %}
+                
                     {% if request.path == url_for('signup') %}
                         <li class="nav-item">
                             <a class="nav-link btn" href="{{ url_for('login') }}">
@@ -51,8 +53,7 @@
                             </a>
                         </li>
                     {% endif %}
-                {% endif %}
-
+                {% endif %}                
             </ul>
         </div>
     </div>

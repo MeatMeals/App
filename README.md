@@ -6,9 +6,7 @@ Introduction here
 
 If you prefer to use the hosted version of the project, you can access it through either of the following URLs:
 
-https://meatmeals.site
-
-https://mm-hch9are8dudugmbp.canadacentral-01.azurewebsites.net
+https://test-cwc3gnetdzh9e7cd.canadaeast-01.azurewebsites.net/
 
 These domains point to the deployed version of Meat Meals, providing the full functionality of the application.
 
