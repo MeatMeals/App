@@ -16,7 +16,6 @@ https://test-cwc3gnetdzh9e7cd.canadaeast-01.azurewebsites.net/
 
 These domains point to the deployed version of Meat Meals, providing the full functionality of the application.
 
-=======================================
 # Instructions for Running the Meat Meals Project
 
 To set up and run the Meat Meals project, follow these steps:
