@@ -12,7 +12,7 @@ With an intuitive interface and filtering options, users can search for recipes 
 
 If you prefer to use the hosted version of the project, you can access it through either of the following URLs:
 
-https://test-cwc3gnetdzh9e7cd.canadaeast-01.azurewebsites.net/
+https://meatmeals.site/
 
 These domains point to the deployed version of Meat Meals, providing the full functionality of the application.
 
