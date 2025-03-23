@@ -728,9 +728,6 @@ def weight_tracking():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
     estimated_date = None
     total_lbs_to_lose = None
     weeks_needed = None
@@ -748,47 +745,61 @@ def weight_tracking():
         total_lbs_to_lose = current_weight - goal_weight
 
         if total_lbs_to_lose <= 0:
-            estimated_date = "Your goal weight must be less than your current weight."
+            flash("Your goal weight must be less than your current weight.", "danger")
+            return redirect(url_for('weight_tracking'))
+
         elif weekly_loss <= 0:
-            estimated_date = "Weekly loss must be greater than 0."
+            flash("Weekly loss must be greater than 0.", "danger")
+            return redirect(url_for('weight_tracking'))
+
         elif weekly_loss > 10:
-            estimated_date = "Weekly loss is too high. Please choose a realistic target (max 10 lbs/week)."
-        else:
-            weeks_needed = total_lbs_to_lose / weekly_loss
-            base_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-            estimated_date = (base_date + timedelta(weeks=weeks_needed)).strftime('%B %d, %Y')
+            print(">>> FLASHING: Weekly loss too high")
+            flash("Weekly loss is too high. Please choose a realistic target (max 10 lbs/week).", "danger")
+            return redirect(url_for('weight_tracking'))
 
-            # Save user details
-            cursor.execute('''
-                MERGE user_details AS target
-                USING (SELECT ? AS user_id) AS source
-                ON (target.user_id = source.user_id)
-                WHEN MATCHED THEN 
-                    UPDATE SET age = ?, sex = ?, height_in = ?
-                WHEN NOT MATCHED THEN
-                    INSERT (user_id, age, sex, height_in)
-                    VALUES (?, ?, ?, ?);
-            ''', (session['user_id'], age, sex, total_height_inches,
-                  session['user_id'], age, sex, total_height_inches))
+        
+        weeks_needed = total_lbs_to_lose / weekly_loss
+        base_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        estimated_date = (base_date + timedelta(weeks=weeks_needed)).strftime('%B %d, %Y')
 
-            # Save weight entry
-            cursor.execute('''
-                INSERT INTO weight_tracking (user_id, current_weight, goal_weight, weekly_loss_rate)
-                VALUES (?, ?, ?, ?)
-            ''', (session['user_id'], current_weight, goal_weight, weekly_loss))
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+            MERGE user_details AS target
+            USING (SELECT ? AS user_id) AS source
+            ON (target.user_id = source.user_id)
+            WHEN MATCHED THEN 
+                UPDATE SET age = ?, sex = ?, height_in = ?
+            WHEN NOT MATCHED THEN
+                INSERT (user_id, age, sex, height_in)
+                VALUES (?, ?, ?, ?);
+        ''', (session['user_id'], age, sex, total_height_inches,
+              session['user_id'], age, sex, total_height_inches))
+
+        cursor.execute('''
+            INSERT INTO weight_tracking (user_id, current_weight, goal_weight, weekly_loss_rate)
+            VALUES (?, ?, ?, ?)
+        ''', (session['user_id'], current_weight, goal_weight, weekly_loss))
             
-            conn.commit()
+        conn.commit()
+        conn.close()
 
-            # Store values in session for display
-            session['age'] = age
-            session['sex'] = sex
-            session['height_ft'] = height_ft
-            session['height_in'] = height_in
-            session['current_weight'] = current_weight
-            session['goal_weight'] = goal_weight
-            session['weekly_loss'] = weekly_loss
+        session['age'] = age
+        session['sex'] = sex
+        session['height_ft'] = height_ft
+        session['height_in'] = height_in
+        session['current_weight'] = current_weight
+        session['goal_weight'] = goal_weight
+        session['weekly_loss'] = weekly_loss
+        session['estimated_date'] = estimated_date
+        session['total_lbs_to_lose'] = total_lbs_to_lose
+        session['weeks_needed'] = round(weeks_needed, 1)
 
-    # Fetch weight history
+        return redirect(url_for('weight_tracking'))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
     cursor.execute('''
         SELECT id, current_weight, goal_weight, weekly_loss_rate, timestamp
         FROM weight_tracking
@@ -803,19 +814,19 @@ def weight_tracking():
 
     return render_template(
         'weight_tracking.html',
-        estimated_date=estimated_date,
+        estimated_date=session.pop('estimated_date', None),
         weight_history=weight_history,
-        age=session.get('age'),
-        sex=session.get('sex'),
-        height_ft=session.get('height_ft'),
-        height_in=session.get('height_in'),
-        current_weight=session.get('current_weight'),
-        goal_weight=session.get('goal_weight'),
-        weekly_loss=session.get('weekly_loss'),
-        total_lbs_to_lose=total_lbs_to_lose,
-        weeks_needed=weeks_needed,
+        age=session.pop('age', None),
+        sex=session.pop('sex', None),
+        height_ft=session.pop('height_ft', None),
+        height_in=session.pop('height_in', None),
+        current_weight=session.pop('current_weight', None),
+        goal_weight=session.pop('goal_weight', None),
+        weekly_loss=session.pop('weekly_loss', None),
+        total_lbs_to_lose=session.pop('total_lbs_to_lose', None),
+        weeks_needed=session.pop('weeks_needed', None),
         timedelta=timedelta,
-        now=now
+        now=now,
     )
 
 @app.route('/subscription')
