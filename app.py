@@ -756,7 +756,7 @@ def weight_tracking():
             print(">>> FLASHING: Weekly loss too high")
             session.modified = True  # Ensures session changes are saved
             flash("Weekly loss is too high. Please choose a realistic target (max 10 lbs/week).", "danger")
-            return redirect(url_for('weight_tracking'))
+            
 
         
         weeks_needed = total_lbs_to_lose / weekly_loss
