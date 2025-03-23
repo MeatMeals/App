@@ -1,22 +1,127 @@
 {% extends "base.html" %}
 
-{% block title %}Weight Loss Tracker | Meat Meals{% endblock %}
+{% block title %}Weight Tracking | Meat Meals{% endblock %}
 
 {% block content %}
 
 <div class="container">
-    
-    <div class="card mt-4 mb-4">
-        <h2 class="fw-bold mt-4 mb-2 text-center">Weight Loss Tracker</h2>
-        <p class="text-muted">Monitor your weight loss progress to help yourself stay on track!</p>
+
+    <div class="card mt-4 mb-4 p-4">
+        <h2 class="fw-bold text-center mb-3">Weight Loss Tracker</h2>
+
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">
+                    <label>Age</label>
+                    <input type="number" name="age" class="form-control" required>
+                </div>
+                <div class="col-md-4 fw-bold">
+                    <label>Sex</label>
+                    <select name="sex" class="form-select" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+                <div class="col-md-4 fw-bold">
+                    <label>Height</label>
+                    <div class="d-flex gap-2">
+                        <input type="number" name="height_ft" class="form-control" placeholder="Feet" required>
+                        <input type="number" name="height_in" class="form-control" placeholder="Inches" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-4 fw-bold">
+                    <label>Current Weight (lbs)</label>
+                    <input type="number" step="0.1" name="current_weight" class="form-control" required>
+                </div>
+                <div class="col-md-4 fw-bold">
+                    <label>Goal Weight (lbs)</label>
+                    <input type="number" step="0.1" name="goal_weight" class="form-control" required>
+                </div>
+                <div class="col-md-4 fw-bold">
+                    <label>Weekly Loss Goal (lbs)</label>
+                    <input type="number" step="0.1" name="weekly_loss" class="form-control" required>
+                </div>
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Calculate Goal</button>
+            </div>
+        </form>
     </div>
-    
-    <div class="card mt-4 mb-4">
-        <div class="card-body text-center">
-            Coming soon . . .
+
+    {% if estimated_date and weight_history %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body px-4 py-3">
+            <h4 class="fw-bold text-center mb-4">Your Progress Summary</h4>
+            
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><strong>Age:</strong> {{ age }}</li>
+                        <li class="mb-2"><strong>Sex:</strong> {{ sex }}</li>
+                        <li class="mb-2"><strong>Height:</strong> {{ height_ft }} ft {{ height_in }} in</li>
+                        <li class="mb-2"><strong>Current Weight:</strong> {{ current_weight }} lbs</li>
+                        <li class="mb-2"><strong>Goal Weight:</strong> {{ goal_weight }} lbs</li>
+                        <li class="mb-2"><strong>Weekly Loss Target:</strong> {{ weekly_loss }} lbs/week</li>
+                        <li class="mb-2"><strong>Total to Lose:</strong> {{ total_lbs_to_lose }} lbs</li>
+                        <li class="mb-2"><strong>Estimated Weeks Needed:</strong> {{ weeks_needed }}</li>
+                        <hr>
+                        <li class="fw-bold text-center mt-3">
+                            <strong class="fw-bold">Estimated Goal Date:</strong><br>
+                            <span class="fs-5">{{ estimated_date }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
+    {% endif %}
+    
+
+    {% if weight_history %}
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+            <h5 class="card-title text-center mb-3 fw-bold">Weight Entry History</h5>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Current Weight</th>
+                            <th>Goal Weight</th>
+                            <th>Weekly Loss</th>
+                            <th>Estimated Goal Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in weight_history %}
+                        <tr>
+                            <td>{{ row.id }}</td>
+                            <td>{{ row.timestamp.strftime('%m-%d-%Y') }}</td>
+                            <td>{{ row.current_weight }} lbs</td>
+                            <td>{{ row.goal_weight }} lbs</td>
+                            <td>{{ row.weekly_loss_rate }} lbs/week</td>
+                            <td>
+                                {% set to_lose = row.current_weight - row.goal_weight %}
+                                {% if row.weekly_loss_rate > 0 and to_lose > 0 %}
+                                    {{ (now + timedelta(weeks=(to_lose / row.weekly_loss_rate))).strftime('%B %d, %Y') }}
+                                {% else %}
+                                    Invalid
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 </div>
-        
 
 {% endblock %}

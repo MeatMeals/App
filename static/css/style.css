@@ -752,6 +752,55 @@ border:0;
 text-align: center;
 }
 
+.subscription-hero {
+    background-color: rgba(0, 0, 0, 0.55);
+    background-blend-mode: darken;
+}
+
+.card ul li {
+    padding: 0.4rem 0;
+    font-size: 1rem;
+}
+
+.border-primary { border-color: #f08c35 !important; }
+
+.text-primary { color: #f08c35 !important; }
+
+.btn-outline-primary {
+    color: #f08c35;
+    border-color: #f08c35;
+}
+
+.btn-outline-primary:hover {
+    color: #fff;
+    background-color: #f08c35;
+    border-color: #f08c35;
+}
+
+
+.plan-card {
+    border-radius: 12px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.plan-card:hover {
+    transform: translateY(-4px);
+}
+
+.plan-card hr {
+    margin: 1.5rem 0;
+}
+
+.plan-card ul li {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+}
+
+.plan-feature-muted {
+    color: #aaa;
+    font-weight: 500;
+}
+
 .wrapper {
 display: flex;
 }
