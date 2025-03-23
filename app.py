@@ -722,10 +722,98 @@ def search_recipes_api():
         })
 
 
-@app.route('/weight-tracking')
+@app.route('/weight-tracking', methods=['GET', 'POST'])
 def weight_tracking():
-    return render_template('weight_tracking.html')
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    if request.method == 'POST':
+        age = int(request.form['age'])
+        sex = request.form['sex']
+        height_ft = int(request.form['height_ft'])
+        height_in = int(request.form['height_in'])
+        current_weight = float(request.form['current_weight'])
+        goal_weight = float(request.form['goal_weight'])
+        weekly_loss = float(request.form['weekly_loss'])
+
+        total_height_inches = (height_ft * 12) + height_in
+
+        cursor.execute('''
+            MERGE user_details AS target
+            USING (SELECT ? AS user_id) AS source
+            ON (target.user_id = source.user_id)
+            WHEN MATCHED THEN 
+                UPDATE SET age = ?, sex = ?, height_in = ?
+            WHEN NOT MATCHED THEN
+                INSERT (user_id, age, sex, height_in)
+                VALUES (?, ?, ?, ?);
+        ''', (session['user_id'], age, sex, total_height_inches,
+              session['user_id'], age, sex, total_height_inches))
+
+        cursor.execute('''
+            INSERT INTO weight_tracking (user_id, current_weight, goal_weight, weekly_loss_rate)
+            VALUES (?, ?, ?, ?)
+        ''', (session['user_id'], current_weight, goal_weight, weekly_loss))
+
+        conn.commit()
+        conn.close()
+
+        session['age'] = age
+        session['sex'] = sex
+        session['height_ft'] = height_ft
+        session['height_in'] = height_in
+        session['current_weight'] = current_weight
+        session['goal_weight'] = goal_weight
+        session['weekly_loss'] = weekly_loss
+
+        return redirect(url_for('weight_tracking'))
+
+    cursor.execute('''
+        SELECT id, current_weight, goal_weight, weekly_loss_rate, timestamp
+        FROM weight_tracking
+        WHERE user_id = ?
+        ORDER BY timestamp DESC
+    ''', (session['user_id'],))
+    weight_history = cursor.fetchall()
+    conn.close()
+
+    estimated_date = None
+    total_lbs_to_lose = None
+    weeks_needed = None
+
+    if 'current_weight' in session:
+        total_lbs_to_lose = session['current_weight'] - session['goal_weight']
+        if total_lbs_to_lose > 0 and session['weekly_loss'] > 0:
+            weeks_needed = total_lbs_to_lose / session['weekly_loss']
+            base_date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+            estimated_date = (base_date + timedelta(weeks=weeks_needed)).strftime('%B %d, %Y')
+
+    now = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    return render_template(
+        'weight_tracking.html',
+        estimated_date=estimated_date,
+        weight_history=weight_history,
+        age=session.get('age'),
+        sex=session.get('sex'),
+        height_ft=session.get('height_ft'),
+        height_in=session.get('height_in'),
+        current_weight=session.get('current_weight'),
+        goal_weight=session.get('goal_weight'),
+        weekly_loss=session.get('weekly_loss'),
+        total_lbs_to_lose=total_lbs_to_lose,
+        weeks_needed=weeks_needed,
+        timedelta=timedelta,
+        now=now
+    )
+
+
+@app.route('/subscription')
+def subscription():
+    return render_template('subscription.html')
 
 
 if __name__ == '__main__':

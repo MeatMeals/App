@@ -33,6 +33,33 @@ def init_db():
             FOREIGN KEY (user_id) REFERENCES users(id)
         )
     ''')
+
+    # Create User Details table
+    cursor.execute('''
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='user_details' AND xtype='U')
+        CREATE TABLE user_details (
+            user_id INT PRIMARY KEY,
+            age INT,
+            sex VARCHAR(10),
+            height_in INT,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+
+    # Create Weight Tracking table
+    cursor.execute('''
+        IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='weight_tracking' AND xtype='U')
+        CREATE TABLE weight_tracking (
+            id INT PRIMARY KEY IDENTITY(1,1),
+            user_id INT,
+            current_weight FLOAT,
+            goal_weight FLOAT,
+            weekly_loss_rate FLOAT,
+            timestamp DATETIME DEFAULT GETDATE(),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+
     
     conn.commit()
     conn.close() 

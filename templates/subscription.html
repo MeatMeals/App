@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Subscription Plans | Meat Meals{% endblock %}
+
+{% block content %}
+
+
+<div class="subscription-hero text-white text-center py-5">
+    <div class="container">
+        <h1 class="display-5 fw-bold">Choose Your Plan</h1>
+        <p class="lead">Compare our plans and pick what works best for your cooking lifestyle</p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row justify-content-center g-4">
+        <!-- Free Plan -->
+        <div class="col-md-5">
+            <div class="card plan-card shadow-sm border">
+                <div class="card-body px-4 py-4 text-center">
+                    <h3 class="fw-bold mb-1">Free Plan</h3>
+                    <p class="text-muted mb-3">Free and limited access to MeatMeals</p>
+                    <hr>
+                    <ul class="text-start ps-3">
+                        <li class="fw-bold">Browse Recipes</li>
+                        <li class="fw-bold">Save Favorite Recipes</li>
+                        <li class="fw-bold">Create Meal Plans</li>
+                        <li class="plan-feature-muted">Weight Loss Tracker</li>
+                        <li class="plan-feature-muted">Advanced Analytics</li>
+                    </ul>
+                    <hr>
+                    <a href="{{ url_for('signup') }}" class="btn btn-outline-primary w-100 mt-3">Get Started</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Plan -->
+        <div class="col-md-5">
+            <div class="card plan-card shadow-sm border-primary border-2">
+                <div class="card-body px-4 py-4 text-center">
+                    <h3 class="fw-bold text-primary mb-1">Premium Plan</h3>
+                    <p class="text-muted mb-3">$5/month</p>
+                    <hr>
+                    <ul class="text-start ps-3">
+                        <li class="fw-bold">Browse Recipes</li>
+                        <li class="fw-bold">Save Favorite Recipes</li>
+                        <li class="fw-bold">Create Meal Plans</li>
+                        <li class="fw-bold">Weight Loss Tracker</li>
+                        <li class="fw-bold">Advanced Analytics</li>
+                    </ul>
+                    <hr>
+                    <a href="{{ url_for('signup') }}" class="btn btn-primary w-100 mt-3">Select</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{{ url_for('homepage') }}" class="btn btn-secondary px-4">&larr; Back to Homepage</a>
+    </div>
+</div>
+{% endblock %}
